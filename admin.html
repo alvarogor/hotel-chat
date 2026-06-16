@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel de Administración — Recepcionista Virtual</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, Arial, sans-serif;
+    background: #f4f2ed;
+    color: #2d1f0e;
+    padding: 24px;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  header { margin-bottom: 28px; }
+  header h1 { font-size: 22px; margin-bottom: 4px; }
+  header p { color: #7a6a52; font-size: 14px; }
+
+  .lock-screen {
+    background: white;
+    border-radius: 14px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .lock-screen input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #e0d8c5;
+    border-radius: 10px;
+    font-size: 15px;
+    margin: 16px 0;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .card h2 { font-size: 15px; margin-bottom: 14px; color: #d4af37; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  label { display: block; font-size: 13px; color: #5c4f3a; margin-bottom: 5px; margin-top: 12px; font-weight: 600; }
+  label:first-of-type { margin-top: 0; }
+  input, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #e0d8c5;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #2d1f0e;
+    background: #fbfaf6;
+  }
+  input:focus, textarea:focus { outline: none; border-color: #d4af37; }
+  textarea { resize: vertical; min-height: 60px; }
+
+  .room-row { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 10px; padding: 12px; background: #fbfaf6; border-radius: 8px; }
+  .room-row textarea { grid-column: 1 / -1; margin-top: 8px; }
+  .room-row .remove { grid-column: 1 / -1; text-align: right; }
+  .remove-btn { background: none; border: none; color: #c0392b; font-size: 12px; cursor: pointer; }
+
+  .add-room-btn {
+    margin-top: 10px;
+    background: #fbfaf6;
+    border: 1.5px dashed #d4af37;
+    color: #8a6d1f;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .save-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #2d1f0e, #1a1208);
+    color: #d4af37;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .save-btn:hover { opacity: 0.9; }
+
+  .status-msg {
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-size: 14px;
+    display: none;
+  }
+  .status-msg.success { background: #e6f4ea; color: #1e7e34; display: block; }
+  .status-msg.error { background: #fdeded; color: #c0392b; display: block; }
+
+  .preview-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #d4af37;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>⚙️ Panel de Administración</h1>
+    <p>Personaliza tu recepcionista virtual sin tocar código</p>
+  </header>
+
+  <div id="lockScreen" class="lock-screen">
+    <h2 style="margin-bottom: 8px;">🔒 Acceso privado</h2>
+    <p style="color: #7a6a52; font-size: 14px;">Introduce la contraseña de administrador</p>
+    <input type="password" id="passwordInput" placeholder="Contraseña" onkeydown="if(event.key==='Enter') unlock()" />
+    <button class="save-btn" onclick="unlock()">Entrar</button>
+    <p id="lockError" style="color:#c0392b; font-size:13px; margin-top:10px;"></p>
+  </div>
+
+  <div id="panel" style="display:none;">
+    <div class="card">
+      <h2>Información general</h2>
+      <label>Nombre del hotel</label>
+      <input id="hotelName" placeholder="Hotel Mirador Barcelona" />
+
+      <label>Nombre de la asistente</label>
+      <input id="assistantName" placeholder="Sofia" />
+
+      <label>Dirección</label>
+      <input id="address" placeholder="Calle Falsa 123, Barcelona" />
+
+      <label>Teléfono</label>
+      <input id="phone" placeholder="+34 93 123 45 67" />
+
+      <label>Email</label>
+      <input id="email" placeholder="info@hotel.com" />
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div>
+          <label>Hora de entrada</label>
+          <input id="checkIn" placeholder="3:00 PM" />
+        </div>
+        <div>
+          <label>Hora de salida</label>
+          <input id="checkOut" placeholder="11:00 AM" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Habitaciones y precios</h2>
+      <div id="roomsContainer"></div>
+      <button class="add-room-btn" onclick="addRoom()">+ Añadir habitación</button>
+    </div>
+
+    <div class="card">
+      <h2>Servicios y comodidades</h2>
+      <label>Describe los servicios del hotel</label>
+      <textarea id="amenities" placeholder="Piscina, restaurante, gimnasio 24h, mascotas permitidas..."></textarea>
+    </div>
+
+    <div class="card">
+      <h2>Recomendaciones locales</h2>
+      <label>Restaurantes y lugares cercanos</label>
+      <textarea id="localTips" placeholder="Restaurante X (5 min andando), Museo Y..."></textarea>
+    </div>
+
+    <div class="card">
+      <h2>Política de reservas</h2>
+      <textarea id="bookingPolicy" placeholder="Cancelación gratuita hasta 48h antes, pago en destino..."></textarea>
+    </div>
+
+    <button class="save-btn" onclick="saveConfig()">💾 Guardar cambios</button>
+    <div id="statusMsg" class="status-msg"></div>
+    <div style="text-align:center;">
+      <a href="/index.html" target="_blank" class="preview-link">→ Ver el chat en vivo</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  let adminPassword = '';
+  let rooms = [];
+
+  async function unlock() {
+    const pw = document.getElementById('passwordInput').value;
+    try {
+      const res = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw })
+      });
+      if (res.ok) {
+        adminPassword = pw;
+        document.getElementById('lockScreen').style.display = 'none';
+        document.getElementById('panel').style.display = 'block';
+      } else {
+        document.getElementById('lockError').textContent = 'Contraseña incorrecta';
+      }
+    } catch (err) {
+      document.getElementById('lockError').textContent = 'Error de conexión';
+    }
+  }
+
+  async function loadConfig() {
+    try {
+      const res = await fetch('/api/config');
+      const config = await res.json();
+
+      document.getElementById('hotelName').value = config.hotelName || '';
+      document.getElementById('assistantName').value = config.assistantName || '';
+      document.getElementById('address').value = config.address || '';
+      document.getElementById('phone').value = config.phone || '';
+      document.getElementById('email').value = config.email || '';
+      document.getElementById('checkIn').value = config.checkIn || '';
+      document.getElementById('checkOut').value = config.checkOut || '';
+      document.getElementById('amenities').value = config.amenities || '';
+      document.getElementById('localTips').value = config.localTips || '';
+      document.getElementById('bookingPolicy').value = config.bookingPolicy || '';
+
+      rooms = config.rooms || [];
+      renderRooms();
+    } catch (err) {
+      console.error('Error loading config', err);
+    }
+  }
+
+  function renderRooms() {
+    const container = document.getElementById('roomsContainer');
+    container.innerHTML = rooms.map((room, i) => `
+      <div class="room-row">
+        <input value="${room.name || ''}" placeholder="Nombre habitación" oninput="rooms[${i}].name = this.value" />
+        <input value="${room.price || ''}" placeholder="Precio €" oninput="rooms[${i}].price = this.value" />
+        <textarea placeholder="Descripción" oninput="rooms[${i}].description = this.value">${room.description || ''}</textarea>
+        <div class="remove"><button class="remove-btn" onclick="removeRoom(${i})">Eliminar</button></div>
+      </div>
+    `).join('');
+  }
+
+  function addRoom() {
+    rooms.push({ name: '', price: '', description: '' });
+    renderRooms();
+  }
+
+  function removeRoom(i) {
+    rooms.splice(i, 1);
+    renderRooms();
+  }
+
+  async function saveConfig() {
+    const payload = {
+      password: adminPassword,
+      hotelName: document.getElementById('hotelName').value,
+      assistantName: document.getElementById('assistantName').value,
+      address: document.getElementById('address').value,
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value,
+      checkIn: document.getElementById('checkIn').value,
+      checkOut: document.getElementById('checkOut').value,
+      amenities: document.getElementById('amenities').value,
+      localTips: document.getElementById('localTips').value,
+      bookingPolicy: document.getElementById('bookingPolicy').value,
+      rooms: rooms
+    };
+
+    const statusEl = document.getElementById('statusMsg');
+
+    try {
+      const res = await fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        statusEl.className = 'status-msg success';
+        statusEl.textContent = '✅ Guardado correctamente';
+      } else {
+        const data = await res.json();
+        statusEl.className = 'status-msg error';
+        statusEl.textContent = '❌ ' + (data.error || 'Error al guardar');
+      }
+    } catch (err) {
+      statusEl.className = 'status-msg error';
+      statusEl.textContent = '❌ Error de conexión';
+    }
+  }
+
+  // Pre-load config so fields aren't empty (password still required to unlock)
+  loadConfig();
+</script>
+</body>
+</html>

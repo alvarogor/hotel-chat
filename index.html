@@ -284,12 +284,12 @@
   <div class="header">
     <div class="hotel-logo">🏨</div>
     <div class="hotel-info">
-      <h1>HOTEL MIRADOR</h1>
-      <p>Barcelona · Gothic Quarter</p>
+      <h1 id="hotelNameHeader">HOTEL MIRADOR</h1>
+      <p id="hotelAddressHeader">Barcelona · Gothic Quarter</p>
     </div>
     <div class="status">
       <div class="status-dot"></div>
-      Sofia, AI Concierge
+      <span id="assistantNameHeader">Sofia</span>, recepción virtual
     </div>
   </div>
 
@@ -325,6 +325,25 @@
 <script>
   const API_URL = '/api/chat';
   let conversationHistory = [];
+
+  async function loadHotelConfig() {
+    try {
+      const res = await fetch('/api/config');
+      const config = await res.json();
+      if (config.hotelName) {
+        document.getElementById('hotelNameHeader').textContent = config.hotelName.toUpperCase();
+      }
+      if (config.address) {
+        document.getElementById('hotelAddressHeader').textContent = config.address.split(',').slice(-2).join(',').trim();
+      }
+      if (config.assistantName) {
+        document.getElementById('assistantNameHeader').textContent = config.assistantName;
+      }
+    } catch (err) {
+      console.error('Could not load hotel config', err);
+    }
+  }
+  loadHotelConfig();
 
   function autoResize(el) {
     el.style.height = 'auto';
