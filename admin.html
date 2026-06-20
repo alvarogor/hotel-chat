@@ -143,6 +143,9 @@
 
       <label>Horario de apertura</label>
       <input id="openingHours" placeholder="Lunes a Viernes 9:30 - 20:00" />
+
+      <label>Email para recibir notificaciones de reservas</label>
+      <input id="notificationEmail" placeholder="tu-email@ejemplo.com" />
     </div>
 
     <div class="card">
@@ -210,6 +213,7 @@
       document.getElementById('phone').value = config.phone || '';
       document.getElementById('email').value = config.email || '';
       document.getElementById('openingHours').value = config.openingHours || '';
+      document.getElementById('notificationEmail').value = config.notificationEmail || '';
       document.getElementById('amenities').value = config.amenities || '';
       document.getElementById('promotions').value = config.promotions || '';
       document.getElementById('policies').value = config.policies || '';
@@ -252,6 +256,7 @@
       phone: document.getElementById('phone').value,
       email: document.getElementById('email').value,
       openingHours: document.getElementById('openingHours').value,
+      notificationEmail: document.getElementById('notificationEmail').value,
       amenities: document.getElementById('amenities').value,
       promotions: document.getElementById('promotions').value,
       policies: document.getElementById('policies').value,
