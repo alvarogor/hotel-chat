@@ -11,26 +11,26 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const CONFIG_PATH = path.join(__dirname, "hotel-config.json");
+const CONFIG_PATH = path.join(__dirname, "business-config.json");
 
-// ── Default hotel configuration ───────────────────────────────────────────────
+// ── Default business configuration (Beauty / Aesthetic Clinic) ────────────────
 const DEFAULT_CONFIG = {
-  hotelName: "Hotel Mirador Barcelona",
+  businessName: "Centro de Estética Bella",
   assistantName: "Sofia",
-  address: "Carrer del Bisbe 12, Gothic Quarter, Barcelona",
-  checkIn: "3:00 PM",
-  checkOut: "11:00 AM",
-  phone: "+34 93 123 45 67",
-  email: "info@hotelmirador.com",
-  rooms: [
-    { name: "Deluxe Room", price: "120", description: "King bed, city view, 25m²" },
-    { name: "Superior Room", price: "150", description: "King bed, Gothic Quarter view, 30m²" },
-    { name: "Junior Suite", price: "200", description: "Separate living area, terrace, 45m²" },
-    { name: "Penthouse Suite", price: "350", description: "Private rooftop terrace, panoramic views, 65m²" }
+  address: "Calle Colón 45, Valencia",
+  openingHours: "Lunes a Viernes 9:30 - 20:00, Sábados 10:00 - 14:00",
+  phone: "+34 96 123 45 67",
+  email: "info@esteticabella.com",
+  services: [
+    { name: "Limpieza facial profunda", price: "45", description: "60 min, incluye exfoliación e hidratación" },
+    { name: "Depilación láser (piernas completas)", price: "60", description: "Por sesión, paquete de 6 disponible" },
+    { name: "Manicura + Pedicura", price: "35", description: "Incluye esmaltado semipermanente" },
+    { name: "Masaje relajante", price: "50", description: "60 min, aceites esenciales" },
+    { name: "Tratamiento anti-edad", price: "70", description: "Radiofrecuencia facial, 45 min" }
   ],
-  amenities: "Rooftop terrace with pool, Restaurant, Cocktail bar, 24h gym, Pets allowed (€20/night supplement)",
-  localTips: "Can Culleretes (traditional Catalan, 5 min walk), Barcelona Cathedral (2 min walk), Las Ramblas (5 min walk)",
-  bookingPolicy: "Free cancellation up to 48 hours before arrival. Payment on arrival. Breakfast included in all rates.",
+  amenities: "Zona de espera con café e infusiones, cabinas privadas, productos veganos y cruelty-free, parking cercano",
+  policies: "Cancelación gratuita hasta 24h antes de la cita. Se requiere un 20% de depósito para tratamientos de más de 60 min. Pago con tarjeta o efectivo.",
+  promotions: "10% de descuento en el primer tratamiento para nuevos clientes. Bono de 6 sesiones de láser con 15% de descuento.",
   primaryColor: "#d4af37",
   adminPassword: "admin123"
 };
@@ -52,39 +52,40 @@ function saveConfig(config) {
 }
 
 function buildSystemPrompt(config) {
-  const roomList = config.rooms
-    .map(r => `- ${r.name}: €${r.price}/night — ${r.description}`)
+  const serviceList = config.services
+    .map(s => `- ${s.name}: €${s.price} — ${s.description}`)
     .join("\n");
 
   return `
-You are ${config.assistantName}, the friendly AI receptionist of ${config.hotelName}.
+You are ${config.assistantName}, the friendly AI receptionist of ${config.businessName}, a beauty and aesthetic center.
 
-HOTEL DETAILS:
-- Name: ${config.hotelName}
+BUSINESS DETAILS:
+- Name: ${config.businessName}
 - Location: ${config.address}
-- Check-in: ${config.checkIn} | Check-out: ${config.checkOut}
+- Opening hours: ${config.openingHours}
 - Phone: ${config.phone}
 - Email: ${config.email}
 
-ROOMS & PRICES (per night):
-${roomList}
+SERVICES & PRICES:
+${serviceList}
 
 AMENITIES:
 ${config.amenities}
 
-LOCAL RECOMMENDATIONS:
-${config.localTips}
+CURRENT PROMOTIONS:
+${config.promotions}
 
-BOOKING POLICY:
-${config.bookingPolicy}
+POLICIES:
+${config.policies}
 
 PERSONALITY GUIDELINES:
-- Be warm, helpful and professional
-- Always respond in the same language the guest uses
-- If asked to make a booking, collect: name, dates, room type, number of guests, email
-- After collecting booking info, confirm it and say the team will send a confirmation email within 1 hour
+- Be warm, friendly and professional — like a trusted beauty advisor
+- Always respond in the same language the client uses
+- If asked to book an appointment, collect: name, desired service, preferred date/time, phone number
+- After collecting booking info, confirm it and say the team will call to confirm within a few hours
 - Keep responses concise but friendly
-- Use light emojis occasionally to feel welcoming 🏨
+- Use light emojis occasionally to feel welcoming ✨💆‍♀️
+- If asked about something outside your knowledge (medical advice, specific allergic reactions), recommend they discuss it with the specialist during their visit
 `;
 }
 
@@ -115,7 +116,6 @@ app.post("/api/chat", async (req, res) => {
 // ── Config endpoints (for admin panel + chat widget) ───────────────────────────
 app.get("/api/config", (req, res) => {
   const config = loadConfig();
-  // Don't expose the admin password publicly
   const { adminPassword, ...publicConfig } = config;
   res.json(publicConfig);
 });
@@ -146,11 +146,11 @@ app.post("/api/config", (req, res) => {
 // ── Health check ──────────────────────────────────────────────────────────────
 app.get("/api/health", (req, res) => {
   const config = loadConfig();
-  res.json({ status: "ok", hotel: config.hotelName });
+  res.json({ status: "ok", business: config.businessName });
 });
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`🏨 Hotel Concierge running on http://localhost:${PORT}`);
+  console.log(`💆 Recepcionista Virtual running on http://localhost:${PORT}`);
   console.log(`⚙️  Admin panel: http://localhost:${PORT}/admin.html`);
 });

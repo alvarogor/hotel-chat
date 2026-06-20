@@ -8,26 +8,26 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, Arial, sans-serif;
-    background: #f4f2ed;
-    color: #2d1f0e;
+    background: #faf3f0;
+    color: #4a3838;
     padding: 24px;
   }
   .wrap { max-width: 640px; margin: 0 auto; }
   header { margin-bottom: 28px; }
   header h1 { font-size: 22px; margin-bottom: 4px; }
-  header p { color: #7a6a52; font-size: 14px; }
+  header p { color: #8a7068; font-size: 14px; }
 
   .lock-screen {
     background: white;
     border-radius: 14px;
     padding: 40px 32px;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    box-shadow: 0 4px 20px rgba(150,90,90,0.08);
   }
   .lock-screen input {
     width: 100%;
     padding: 12px 14px;
-    border: 1.5px solid #e0d8c5;
+    border: 1.5px solid #f0ddd6;
     border-radius: 10px;
     font-size: 15px;
     margin: 16px 0;
@@ -38,35 +38,35 @@
     border-radius: 14px;
     padding: 24px;
     margin-bottom: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 12px rgba(150,90,90,0.06);
   }
-  .card h2 { font-size: 15px; margin-bottom: 14px; color: #d4af37; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card h2 { font-size: 15px; margin-bottom: 14px; color: #c98a8a; text-transform: uppercase; letter-spacing: 0.5px; }
 
-  label { display: block; font-size: 13px; color: #5c4f3a; margin-bottom: 5px; margin-top: 12px; font-weight: 600; }
+  label { display: block; font-size: 13px; color: #6b5650; margin-bottom: 5px; margin-top: 12px; font-weight: 600; }
   label:first-of-type { margin-top: 0; }
   input, textarea {
     width: 100%;
     padding: 10px 12px;
-    border: 1.5px solid #e0d8c5;
+    border: 1.5px solid #f0ddd6;
     border-radius: 8px;
     font-size: 14px;
     font-family: inherit;
-    color: #2d1f0e;
-    background: #fbfaf6;
+    color: #4a3838;
+    background: #fffaf8;
   }
-  input:focus, textarea:focus { outline: none; border-color: #d4af37; }
+  input:focus, textarea:focus { outline: none; border-color: #e0a8a0; }
   textarea { resize: vertical; min-height: 60px; }
 
-  .room-row { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 10px; padding: 12px; background: #fbfaf6; border-radius: 8px; }
-  .room-row textarea { grid-column: 1 / -1; margin-top: 8px; }
-  .room-row .remove { grid-column: 1 / -1; text-align: right; }
+  .service-row { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 10px; padding: 12px; background: #fffaf8; border-radius: 8px; }
+  .service-row textarea { grid-column: 1 / -1; margin-top: 8px; }
+  .service-row .remove { grid-column: 1 / -1; text-align: right; }
   .remove-btn { background: none; border: none; color: #c0392b; font-size: 12px; cursor: pointer; }
 
-  .add-room-btn {
+  .add-btn {
     margin-top: 10px;
-    background: #fbfaf6;
-    border: 1.5px dashed #d4af37;
-    color: #8a6d1f;
+    background: #fffaf8;
+    border: 1.5px dashed #e0a8a0;
+    color: #b07268;
     padding: 8px 14px;
     border-radius: 8px;
     font-size: 13px;
@@ -77,8 +77,8 @@
   .save-btn {
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, #2d1f0e, #1a1208);
-    color: #d4af37;
+    background: linear-gradient(135deg, #c98a8a, #e0a8a0);
+    color: white;
     border: none;
     border-radius: 10px;
     font-size: 15px;
@@ -103,7 +103,7 @@
     display: inline-block;
     margin-top: 10px;
     font-size: 13px;
-    color: #d4af37;
+    color: #c98a8a;
     text-decoration: none;
   }
 </style>
@@ -117,7 +117,7 @@
 
   <div id="lockScreen" class="lock-screen">
     <h2 style="margin-bottom: 8px;">🔒 Acceso privado</h2>
-    <p style="color: #7a6a52; font-size: 14px;">Introduce la contraseña de administrador</p>
+    <p style="color: #8a7068; font-size: 14px;">Introduce la contraseña de administrador</p>
     <input type="password" id="passwordInput" placeholder="Contraseña" onkeydown="if(event.key==='Enter') unlock()" />
     <button class="save-btn" onclick="unlock()">Entrar</button>
     <p id="lockError" style="color:#c0392b; font-size:13px; margin-top:10px;"></p>
@@ -126,54 +126,45 @@
   <div id="panel" style="display:none;">
     <div class="card">
       <h2>Información general</h2>
-      <label>Nombre del hotel</label>
-      <input id="hotelName" placeholder="Hotel Mirador Barcelona" />
+      <label>Nombre del negocio</label>
+      <input id="businessName" placeholder="Centro de Estética Bella" />
 
       <label>Nombre de la asistente</label>
       <input id="assistantName" placeholder="Sofia" />
 
       <label>Dirección</label>
-      <input id="address" placeholder="Calle Falsa 123, Barcelona" />
+      <input id="address" placeholder="Calle Falsa 123, Valencia" />
 
       <label>Teléfono</label>
-      <input id="phone" placeholder="+34 93 123 45 67" />
+      <input id="phone" placeholder="+34 96 123 45 67" />
 
       <label>Email</label>
-      <input id="email" placeholder="info@hotel.com" />
+      <input id="email" placeholder="info@negocio.com" />
 
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <div>
-          <label>Hora de entrada</label>
-          <input id="checkIn" placeholder="3:00 PM" />
-        </div>
-        <div>
-          <label>Hora de salida</label>
-          <input id="checkOut" placeholder="11:00 AM" />
-        </div>
-      </div>
+      <label>Horario de apertura</label>
+      <input id="openingHours" placeholder="Lunes a Viernes 9:30 - 20:00" />
     </div>
 
     <div class="card">
-      <h2>Habitaciones y precios</h2>
-      <div id="roomsContainer"></div>
-      <button class="add-room-btn" onclick="addRoom()">+ Añadir habitación</button>
+      <h2>Servicios y precios</h2>
+      <div id="servicesContainer"></div>
+      <button class="add-btn" onclick="addService()">+ Añadir servicio</button>
     </div>
 
     <div class="card">
-      <h2>Servicios y comodidades</h2>
-      <label>Describe los servicios del hotel</label>
-      <textarea id="amenities" placeholder="Piscina, restaurante, gimnasio 24h, mascotas permitidas..."></textarea>
+      <h2>Comodidades del local</h2>
+      <label>Describe las comodidades</label>
+      <textarea id="amenities" placeholder="Zona de espera con café, parking cercano, cabinas privadas..."></textarea>
     </div>
 
     <div class="card">
-      <h2>Recomendaciones locales</h2>
-      <label>Restaurantes y lugares cercanos</label>
-      <textarea id="localTips" placeholder="Restaurante X (5 min andando), Museo Y..."></textarea>
+      <h2>Promociones actuales</h2>
+      <textarea id="promotions" placeholder="10% de descuento primera visita, bono de 6 sesiones..."></textarea>
     </div>
 
     <div class="card">
-      <h2>Política de reservas</h2>
-      <textarea id="bookingPolicy" placeholder="Cancelación gratuita hasta 48h antes, pago en destino..."></textarea>
+      <h2>Política de cancelación y pago</h2>
+      <textarea id="policies" placeholder="Cancelación gratuita hasta 24h antes, depósito requerido..."></textarea>
     </div>
 
     <button class="save-btn" onclick="saveConfig()">💾 Guardar cambios</button>
@@ -186,7 +177,7 @@
 
 <script>
   let adminPassword = '';
-  let rooms = [];
+  let services = [];
 
   async function unlock() {
     const pw = document.getElementById('passwordInput').value;
@@ -213,60 +204,58 @@
       const res = await fetch('/api/config');
       const config = await res.json();
 
-      document.getElementById('hotelName').value = config.hotelName || '';
+      document.getElementById('businessName').value = config.businessName || '';
       document.getElementById('assistantName').value = config.assistantName || '';
       document.getElementById('address').value = config.address || '';
       document.getElementById('phone').value = config.phone || '';
       document.getElementById('email').value = config.email || '';
-      document.getElementById('checkIn').value = config.checkIn || '';
-      document.getElementById('checkOut').value = config.checkOut || '';
+      document.getElementById('openingHours').value = config.openingHours || '';
       document.getElementById('amenities').value = config.amenities || '';
-      document.getElementById('localTips').value = config.localTips || '';
-      document.getElementById('bookingPolicy').value = config.bookingPolicy || '';
+      document.getElementById('promotions').value = config.promotions || '';
+      document.getElementById('policies').value = config.policies || '';
 
-      rooms = config.rooms || [];
-      renderRooms();
+      services = config.services || [];
+      renderServices();
     } catch (err) {
       console.error('Error loading config', err);
     }
   }
 
-  function renderRooms() {
-    const container = document.getElementById('roomsContainer');
-    container.innerHTML = rooms.map((room, i) => `
-      <div class="room-row">
-        <input value="${room.name || ''}" placeholder="Nombre habitación" oninput="rooms[${i}].name = this.value" />
-        <input value="${room.price || ''}" placeholder="Precio €" oninput="rooms[${i}].price = this.value" />
-        <textarea placeholder="Descripción" oninput="rooms[${i}].description = this.value">${room.description || ''}</textarea>
-        <div class="remove"><button class="remove-btn" onclick="removeRoom(${i})">Eliminar</button></div>
+  function renderServices() {
+    const container = document.getElementById('servicesContainer');
+    container.innerHTML = services.map((s, i) => `
+      <div class="service-row">
+        <input value="${s.name || ''}" placeholder="Nombre del servicio" oninput="services[${i}].name = this.value" />
+        <input value="${s.price || ''}" placeholder="Precio €" oninput="services[${i}].price = this.value" />
+        <textarea placeholder="Descripción" oninput="services[${i}].description = this.value">${s.description || ''}</textarea>
+        <div class="remove"><button class="remove-btn" onclick="removeService(${i})">Eliminar</button></div>
       </div>
     `).join('');
   }
 
-  function addRoom() {
-    rooms.push({ name: '', price: '', description: '' });
-    renderRooms();
+  function addService() {
+    services.push({ name: '', price: '', description: '' });
+    renderServices();
   }
 
-  function removeRoom(i) {
-    rooms.splice(i, 1);
-    renderRooms();
+  function removeService(i) {
+    services.splice(i, 1);
+    renderServices();
   }
 
   async function saveConfig() {
     const payload = {
       password: adminPassword,
-      hotelName: document.getElementById('hotelName').value,
+      businessName: document.getElementById('businessName').value,
       assistantName: document.getElementById('assistantName').value,
       address: document.getElementById('address').value,
       phone: document.getElementById('phone').value,
       email: document.getElementById('email').value,
-      checkIn: document.getElementById('checkIn').value,
-      checkOut: document.getElementById('checkOut').value,
+      openingHours: document.getElementById('openingHours').value,
       amenities: document.getElementById('amenities').value,
-      localTips: document.getElementById('localTips').value,
-      bookingPolicy: document.getElementById('bookingPolicy').value,
-      rooms: rooms
+      promotions: document.getElementById('promotions').value,
+      policies: document.getElementById('policies').value,
+      services: services
     };
 
     const statusEl = document.getElementById('statusMsg');
@@ -292,7 +281,6 @@
     }
   }
 
-  // Pre-load config so fields aren't empty (password still required to unlock)
   loadConfig();
 </script>
 </body>

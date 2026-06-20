@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hotel Mirador Barcelona — AI Concierge</title>
+  <title>Centro de Estética — Recepcionista Virtual</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Georgia', serif;
-      background: #1a1208;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: #faf3f0;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       background-image: 
-        radial-gradient(ellipse at 20% 50%, rgba(139, 90, 43, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 40%);
+        radial-gradient(ellipse at 20% 30%, rgba(212, 165, 165, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(230, 198, 188, 0.2) 0%, transparent 50%);
     }
 
     .container {
@@ -26,26 +26,25 @@
       max-height: 780px;
       display: flex;
       flex-direction: column;
-      background: #faf8f3;
-      border-radius: 16px;
+      background: #fffaf8;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+      box-shadow: 0 32px 80px rgba(150, 90, 90, 0.25);
     }
 
-    /* Header */
     .header {
-      background: linear-gradient(135deg, #1a1208 0%, #2d1f0e 100%);
-      padding: 20px 24px;
+      background: linear-gradient(135deg, #c98a8a 0%, #e0a8a0 100%);
+      padding: 22px 24px;
       display: flex;
       align-items: center;
       gap: 14px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
     }
 
-    .hotel-logo {
+    .logo {
       width: 48px;
       height: 48px;
-      background: linear-gradient(135deg, #d4af37, #f0d060);
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -54,17 +53,16 @@
       flex-shrink: 0;
     }
 
-    .hotel-info h1 {
-      color: #d4af37;
+    .biz-info h1 {
+      color: white;
       font-size: 16px;
-      font-weight: normal;
-      letter-spacing: 1px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
     }
 
-    .hotel-info p {
-      color: rgba(255,255,255,0.5);
+    .biz-info p {
+      color: rgba(255,255,255,0.85);
       font-size: 12px;
-      font-family: 'Arial', sans-serif;
       margin-top: 2px;
     }
 
@@ -73,9 +71,8 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.85);
       font-size: 11px;
-      font-family: Arial, sans-serif;
     }
 
     .status-dot {
@@ -91,7 +88,6 @@
       50% { opacity: 0.4; }
     }
 
-    /* Messages */
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -99,12 +95,12 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      background: #faf8f3;
+      background: #fffaf8;
     }
 
     .messages::-webkit-scrollbar { width: 4px; }
     .messages::-webkit-scrollbar-track { background: transparent; }
-    .messages::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 2px; }
+    .messages::-webkit-scrollbar-thumb { background: #e0a8a0; border-radius: 2px; }
 
     .message {
       display: flex;
@@ -126,12 +122,12 @@
     }
 
     .message.assistant .avatar {
-      background: linear-gradient(135deg, #d4af37, #f0d060);
+      background: linear-gradient(135deg, #c98a8a, #e0a8a0);
     }
 
     .message.user .avatar {
-      background: #2d1f0e;
-      color: #d4af37;
+      background: #f3e3df;
+      color: #c98a8a;
     }
 
     .bubble {
@@ -140,50 +136,36 @@
       border-radius: 18px;
       font-size: 14px;
       line-height: 1.6;
-      font-family: Arial, sans-serif;
     }
 
     .message.assistant .bubble {
       background: white;
-      color: #2d1f0e;
+      color: #4a3838;
       border-bottom-left-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 10px rgba(150, 90, 90, 0.08);
     }
 
     .message.user .bubble {
-      background: linear-gradient(135deg, #2d1f0e, #1a1208);
-      color: #f5e6c8;
+      background: linear-gradient(135deg, #c98a8a, #d99a93);
+      color: white;
       border-bottom-right-radius: 4px;
     }
 
-    /* Typing indicator */
-    .typing .bubble {
-      padding: 14px 18px;
-    }
-
-    .typing-dots {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-    }
-
+    .typing .bubble { padding: 14px 18px; }
+    .typing-dots { display: flex; gap: 4px; align-items: center; }
     .typing-dots span {
-      width: 6px;
-      height: 6px;
-      background: #d4af37;
+      width: 6px; height: 6px;
+      background: #e0a8a0;
       border-radius: 50%;
       animation: bounce 1.2s infinite;
     }
-
     .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
     .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
     @keyframes bounce {
       0%, 60%, 100% { transform: translateY(0); }
       30% { transform: translateY(-6px); }
     }
 
-    /* Quick replies */
     .quick-replies {
       padding: 0 20px 12px;
       display: flex;
@@ -193,26 +175,25 @@
 
     .quick-reply {
       background: white;
-      border: 1px solid #d4af37;
-      color: #2d1f0e;
-      padding: 6px 12px;
+      border: 1px solid #e8c5be;
+      color: #4a3838;
+      padding: 7px 13px;
       border-radius: 20px;
       font-size: 12px;
-      font-family: Arial, sans-serif;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .quick-reply:hover {
-      background: #d4af37;
+      background: #e0a8a0;
       color: white;
+      border-color: #e0a8a0;
     }
 
-    /* Input area */
     .input-area {
       padding: 16px 20px;
       background: white;
-      border-top: 1px solid #ede8dc;
+      border-top: 1px solid #f5e5e0;
       display: flex;
       gap: 10px;
       align-items: flex-end;
@@ -220,27 +201,27 @@
 
     .input-area textarea {
       flex: 1;
-      border: 1.5px solid #ede8dc;
+      border: 1.5px solid #f0ddd6;
       border-radius: 22px;
       padding: 10px 16px;
       font-size: 14px;
-      font-family: Arial, sans-serif;
-      color: #2d1f0e;
+      color: #4a3838;
       resize: none;
       outline: none;
       max-height: 100px;
       line-height: 1.5;
       transition: border-color 0.2s;
-      background: #faf8f3;
+      background: #fffaf8;
+      font-family: inherit;
     }
 
-    .input-area textarea:focus { border-color: #d4af37; }
-    .input-area textarea::placeholder { color: #b0a080; }
+    .input-area textarea:focus { border-color: #e0a8a0; }
+    .input-area textarea::placeholder { color: #c4a8a0; }
 
     .send-btn {
       width: 42px;
       height: 42px;
-      background: linear-gradient(135deg, #d4af37, #f0d060);
+      background: linear-gradient(135deg, #c98a8a, #e0a8a0);
       border: none;
       border-radius: 50%;
       cursor: pointer;
@@ -253,28 +234,24 @@
 
     .send-btn:hover { transform: scale(1.05); }
     .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .send-btn svg { width: 18px; height: 18px; fill: white; }
 
-    .send-btn svg { width: 18px; height: 18px; fill: #1a1208; }
-
-    /* Welcome card */
     .welcome-card {
-      background: linear-gradient(135deg, #2d1f0e, #1a1208);
+      background: linear-gradient(135deg, #c98a8a, #e0a8a0);
       border-radius: 16px;
       padding: 20px;
-      color: #f5e6c8;
+      color: white;
       margin-bottom: 4px;
     }
 
     .welcome-card h2 {
-      color: #d4af37;
       font-size: 18px;
       margin-bottom: 6px;
     }
 
     .welcome-card p {
       font-size: 13px;
-      font-family: Arial, sans-serif;
-      color: rgba(245, 230, 200, 0.7);
+      color: rgba(255, 255, 255, 0.9);
       line-height: 1.5;
     }
   </style>
@@ -282,14 +259,14 @@
 <body>
 <div class="container">
   <div class="header">
-    <div class="hotel-logo">🏨</div>
-    <div class="hotel-info">
-      <h1 id="hotelNameHeader">HOTEL MIRADOR</h1>
-      <p id="hotelAddressHeader">Barcelona · Gothic Quarter</p>
+    <div class="logo">💆‍♀️</div>
+    <div class="biz-info">
+      <h1 id="bizNameHeader">CENTRO DE ESTÉTICA BELLA</h1>
+      <p id="bizAddressHeader">Valencia</p>
     </div>
     <div class="status">
       <div class="status-dot"></div>
-      <span id="assistantNameHeader">Sofia</span>, recepción virtual
+      <span id="assistantNameHeader">Sofia</span>
     </div>
   </div>
 
@@ -298,22 +275,22 @@
       <div class="avatar">✨</div>
       <div>
         <div class="welcome-card">
-          <h2>Bienvenido / Welcome</h2>
-          <p>I'm Sofia, your personal AI concierge at Hotel Mirador Barcelona. I'm here 24/7 to help with reservations, local tips, and anything you need for a perfect stay. ¿En qué puedo ayudarte? 🌟</p>
+          <h2>¡Hola! 👋</h2>
+          <p>Soy Sofia, tu recepcionista virtual. Estoy aquí 24/7 para ayudarte a reservar tu cita, resolver dudas sobre tratamientos o precios. ¿En qué puedo ayudarte?</p>
         </div>
       </div>
     </div>
   </div>
 
   <div class="quick-replies" id="quickReplies">
-    <button class="quick-reply" onclick="sendQuick('I\'d like to make a reservation')">🛏️ Book a room</button>
-    <button class="quick-reply" onclick="sendQuick('What are your room prices?')">💶 Prices</button>
-    <button class="quick-reply" onclick="sendQuick('What amenities do you have?')">🏊 Amenities</button>
-    <button class="quick-reply" onclick="sendQuick('Can you recommend restaurants nearby?')">🍽️ Restaurants</button>
+    <button class="quick-reply" onclick="sendQuick('Quiero reservar una cita')">📅 Reservar cita</button>
+    <button class="quick-reply" onclick="sendQuick('¿Qué tratamientos ofrecéis y cuánto cuestan?')">💶 Precios</button>
+    <button class="quick-reply" onclick="sendQuick('¿Cuál es vuestro horario?')">🕐 Horario</button>
+    <button class="quick-reply" onclick="sendQuick('¿Tenéis alguna promoción?')">🎁 Promociones</button>
   </div>
 
   <div class="input-area">
-    <textarea id="input" placeholder="Ask Sofia anything..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <textarea id="input" placeholder="Escribe tu mensaje..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
     <button class="send-btn" id="sendBtn" onclick="sendMessage()">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
@@ -326,24 +303,24 @@
   const API_URL = '/api/chat';
   let conversationHistory = [];
 
-  async function loadHotelConfig() {
+  async function loadBusinessConfig() {
     try {
       const res = await fetch('/api/config');
       const config = await res.json();
-      if (config.hotelName) {
-        document.getElementById('hotelNameHeader').textContent = config.hotelName.toUpperCase();
+      if (config.businessName) {
+        document.getElementById('bizNameHeader').textContent = config.businessName.toUpperCase();
       }
       if (config.address) {
-        document.getElementById('hotelAddressHeader').textContent = config.address.split(',').slice(-2).join(',').trim();
+        document.getElementById('bizAddressHeader').textContent = config.address;
       }
       if (config.assistantName) {
         document.getElementById('assistantNameHeader').textContent = config.assistantName;
       }
     } catch (err) {
-      console.error('Could not load hotel config', err);
+      console.error('Could not load business config', err);
     }
   }
-  loadHotelConfig();
+  loadBusinessConfig();
 
   function autoResize(el) {
     el.style.height = 'auto';
@@ -383,9 +360,7 @@
     div.innerHTML = `
       <div class="avatar">✨</div>
       <div class="bubble">
-        <div class="typing-dots">
-          <span></span><span></span><span></span>
-        </div>
+        <div class="typing-dots"><span></span><span></span><span></span></div>
       </div>
     `;
     messages.appendChild(div);
@@ -426,11 +401,11 @@
         addMessage('assistant', data.reply);
         conversationHistory.push({ role: 'assistant', content: data.reply });
       } else {
-        addMessage('assistant', 'I apologize, I\'m having technical difficulties. Please call us at +34 93 123 45 67 🙏');
+        addMessage('assistant', 'Disculpa, estoy teniendo problemas técnicos. Por favor, llámanos directamente 🙏');
       }
     } catch (err) {
       removeTyping();
-      addMessage('assistant', 'I apologize, I\'m having trouble connecting. Please try again or call us directly at +34 93 123 45 67 📞');
+      addMessage('assistant', 'Disculpa, no puedo conectarme ahora mismo. Inténtalo de nuevo en un momento 📞');
     }
 
     document.getElementById('sendBtn').disabled = false;
