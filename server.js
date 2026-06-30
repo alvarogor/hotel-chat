@@ -9,6 +9,7 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname)));
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
