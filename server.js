@@ -9,7 +9,6 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname)));
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -37,6 +36,7 @@ const DEFAULT_CONFIG = {
   promotions: "Primera consulta completamente gratuita y sin compromiso. Opciones de financiación disponibles para todos los tratamientos.",
   policies: "Cancelación gratuita hasta 24h antes de la cita. Pago tras el tratamiento. Primera visita de evaluación siempre gratuita.",
   notificationEmail: "",
+  calendlyLink: "https://calendly.com/alvarogor69/30min",
   adminPassword: "admin123"
 };
 
@@ -82,7 +82,8 @@ ${config.policies}
 INSTRUCCIONES:
 - Sé cálida, profesional y cercana
 - Responde siempre en el idioma del cliente
-- Si quieren reservar cita, recoge: nombre, servicio, fecha/hora preferida, teléfono
+- Cuando alguien quiera reservar una cita o consulta, manda SIEMPRE este link de Calendly: ${config.calendlyLink || ""} — di algo como "Puedes reservar directamente aquí y elegir el hueco que mejor te venga 👉 [link]"
+- Si no hay link de Calendly configurado, recoge: nombre, servicio, fecha/hora preferida, teléfono
 - Tras recoger los datos, confirma que el equipo contactará para confirmar la cita
 - Si no sabes algo específico, di que lo consultarán con la doctora en la primera visita
 - Usa emojis con moderación ✨`;
