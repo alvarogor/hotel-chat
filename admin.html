@@ -6,106 +6,44 @@
 <title>Panel de Administración — Recepcionista Virtual</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, Arial, sans-serif;
-    background: #faf3f0;
-    color: #4a3838;
-    padding: 24px;
-  }
+  body { font-family: -apple-system, Arial, sans-serif; background: #f5f0eb; color: #2a1f0e; padding: 24px; }
   .wrap { max-width: 640px; margin: 0 auto; }
   header { margin-bottom: 28px; }
   header h1 { font-size: 22px; margin-bottom: 4px; }
-  header p { color: #8a7068; font-size: 14px; }
+  header p { color: #8a7a6a; font-size: 14px; }
 
-  .lock-screen {
-    background: white;
-    border-radius: 14px;
-    padding: 40px 32px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(150,90,90,0.08);
-  }
-  .lock-screen input {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid #f0ddd6;
-    border-radius: 10px;
-    font-size: 15px;
-    margin: 16px 0;
-  }
+  .lock-screen { background: white; border-radius: 14px; padding: 40px 32px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+  .lock-screen input { width: 100%; padding: 12px 14px; border: 1.5px solid #e8e0d5; border-radius: 10px; font-size: 15px; margin: 16px 0; }
 
-  .card {
-    background: white;
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 12px rgba(150,90,90,0.06);
-  }
-  .card h2 { font-size: 15px; margin-bottom: 14px; color: #c98a8a; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card { background: white; border-radius: 14px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+  .card h2 { font-size: 13px; margin-bottom: 14px; color: #c9a96e; text-transform: uppercase; letter-spacing: 0.8px; }
 
-  label { display: block; font-size: 13px; color: #6b5650; margin-bottom: 5px; margin-top: 12px; font-weight: 600; }
+  label { display: block; font-size: 13px; color: #6b5640; margin-bottom: 5px; margin-top: 12px; font-weight: 600; }
   label:first-of-type { margin-top: 0; }
-  input, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1.5px solid #f0ddd6;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-    color: #4a3838;
-    background: #fffaf8;
-  }
-  input:focus, textarea:focus { outline: none; border-color: #e0a8a0; }
+  input, textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #e8e0d5; border-radius: 8px; font-size: 14px; font-family: inherit; color: #2a1f0e; background: #fdfcfa; }
+  input:focus, textarea:focus { outline: none; border-color: #c9a96e; }
   textarea { resize: vertical; min-height: 60px; }
 
-  .service-row { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 10px; padding: 12px; background: #fffaf8; border-radius: 8px; }
+  .color-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .color-field { display: flex; align-items: center; gap: 8px; }
+  .color-field input[type="color"] { width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 2px; border: 1.5px solid #e8e0d5; background: none; }
+  .color-field input[type="text"] { flex: 1; }
+
+  .service-row { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 10px; padding: 12px; background: #fdfcfa; border-radius: 8px; }
   .service-row textarea { grid-column: 1 / -1; margin-top: 8px; }
   .service-row .remove { grid-column: 1 / -1; text-align: right; }
   .remove-btn { background: none; border: none; color: #c0392b; font-size: 12px; cursor: pointer; }
 
-  .add-btn {
-    margin-top: 10px;
-    background: #fffaf8;
-    border: 1.5px dashed #e0a8a0;
-    color: #b07268;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    width: 100%;
-  }
+  .add-btn { margin-top: 10px; background: #fdfcfa; border: 1.5px dashed #c9a96e; color: #8a6a30; padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; width: 100%; }
 
-  .save-btn {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #c98a8a, #e0a8a0);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 8px;
-  }
+  .save-btn { width: 100%; padding: 14px; background: #1a1208; color: #c9a96e; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; }
   .save-btn:hover { opacity: 0.9; }
 
-  .status-msg {
-    text-align: center;
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 12px;
-    font-size: 14px;
-    display: none;
-  }
+  .status-msg { text-align: center; padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 14px; display: none; }
   .status-msg.success { background: #e6f4ea; color: #1e7e34; display: block; }
   .status-msg.error { background: #fdeded; color: #c0392b; display: block; }
 
-  .preview-link {
-    display: inline-block;
-    margin-top: 10px;
-    font-size: 13px;
-    color: #c98a8a;
-    text-decoration: none;
-  }
+  .preview-link { display: inline-block; margin-top: 10px; font-size: 13px; color: #c9a96e; text-decoration: none; }
 </style>
 </head>
 <body>
@@ -116,8 +54,8 @@
   </header>
 
   <div id="lockScreen" class="lock-screen">
-    <h2 style="margin-bottom: 8px;">🔒 Acceso privado</h2>
-    <p style="color: #8a7068; font-size: 14px;">Introduce la contraseña de administrador</p>
+    <h2 style="margin-bottom:8px;">🔒 Acceso privado</h2>
+    <p style="color:#8a7a6a; font-size:14px;">Introduce la contraseña de administrador</p>
     <input type="password" id="passwordInput" placeholder="Contraseña" onkeydown="if(event.key==='Enter') unlock()" />
     <button class="save-btn" onclick="unlock()">Entrar</button>
     <p id="lockError" style="color:#c0392b; font-size:13px; margin-top:10px;"></p>
@@ -127,25 +65,39 @@
     <div class="card">
       <h2>Información general</h2>
       <label>Nombre del negocio</label>
-      <input id="businessName" placeholder="Centro de Estética Bella" />
-
+      <input id="businessName" placeholder="AR Clínica Estética" />
       <label>Nombre de la asistente</label>
       <input id="assistantName" placeholder="Sofia" />
-
       <label>Dirección</label>
-      <input id="address" placeholder="Calle Falsa 123, Valencia" />
-
+      <input id="address" placeholder="Calle Falsa 123, Madrid" />
       <label>Teléfono</label>
-      <input id="phone" placeholder="+34 96 123 45 67" />
-
-      <label>Email</label>
-      <input id="email" placeholder="info@negocio.com" />
-
+      <input id="phone" placeholder="+34 91 123 45 67" />
+      <label>Email de contacto</label>
+      <input id="email" placeholder="info@clinica.com" />
       <label>Horario de apertura</label>
-      <input id="openingHours" placeholder="Lunes a Viernes 9:30 - 20:00" />
-
+      <input id="openingHours" placeholder="Lunes a Viernes 10:00 - 20:00" />
       <label>Email para recibir notificaciones de reservas</label>
       <input id="notificationEmail" placeholder="tu-email@ejemplo.com" />
+    </div>
+
+    <div class="card">
+      <h2>Colores del chat</h2>
+      <div class="color-row">
+        <div>
+          <label>Color principal</label>
+          <div class="color-field">
+            <input type="color" id="primaryColorPicker" value="#1a1208" oninput="document.getElementById('primaryColor').value=this.value" />
+            <input type="text" id="primaryColor" placeholder="#1a1208" oninput="document.getElementById('primaryColorPicker').value=this.value" />
+          </div>
+        </div>
+        <div>
+          <label>Color de acento</label>
+          <div class="color-field">
+            <input type="color" id="accentColorPicker" value="#c9a96e" oninput="document.getElementById('accentColor').value=this.value" />
+            <input type="text" id="accentColor" placeholder="#c9a96e" oninput="document.getElementById('accentColorPicker').value=this.value" />
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -156,18 +108,17 @@
 
     <div class="card">
       <h2>Comodidades del local</h2>
-      <label>Describe las comodidades</label>
-      <textarea id="amenities" placeholder="Zona de espera con café, parking cercano, cabinas privadas..."></textarea>
+      <textarea id="amenities" placeholder="Zona de espera, parking cercano, financiación disponible..."></textarea>
     </div>
 
     <div class="card">
       <h2>Promociones actuales</h2>
-      <textarea id="promotions" placeholder="10% de descuento primera visita, bono de 6 sesiones..."></textarea>
+      <textarea id="promotions" placeholder="Primera consulta gratuita, descuentos en bonos..."></textarea>
     </div>
 
     <div class="card">
-      <h2>Política de cancelación y pago</h2>
-      <textarea id="policies" placeholder="Cancelación gratuita hasta 24h antes, depósito requerido..."></textarea>
+      <h2>Política de citas y cancelación</h2>
+      <textarea id="policies" placeholder="Cancelación gratuita hasta 24h antes..."></textarea>
     </div>
 
     <button class="save-btn" onclick="saveConfig()">💾 Guardar cambios</button>
@@ -186,8 +137,7 @@
     const pw = document.getElementById('passwordInput').value;
     try {
       const res = await fetch('/api/admin-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: pw })
       });
       if (res.ok) {
@@ -197,32 +147,34 @@
       } else {
         document.getElementById('lockError').textContent = 'Contraseña incorrecta';
       }
-    } catch (err) {
-      document.getElementById('lockError').textContent = 'Error de conexión';
-    }
+    } catch (err) { document.getElementById('lockError').textContent = 'Error de conexión'; }
   }
 
   async function loadConfig() {
     try {
       const res = await fetch('/api/config');
-      const config = await res.json();
-
-      document.getElementById('businessName').value = config.businessName || '';
-      document.getElementById('assistantName').value = config.assistantName || '';
-      document.getElementById('address').value = config.address || '';
-      document.getElementById('phone').value = config.phone || '';
-      document.getElementById('email').value = config.email || '';
-      document.getElementById('openingHours').value = config.openingHours || '';
-      document.getElementById('notificationEmail').value = config.notificationEmail || '';
-      document.getElementById('amenities').value = config.amenities || '';
-      document.getElementById('promotions').value = config.promotions || '';
-      document.getElementById('policies').value = config.policies || '';
-
-      services = config.services || [];
+      const c = await res.json();
+      document.getElementById('businessName').value = c.businessName || '';
+      document.getElementById('assistantName').value = c.assistantName || '';
+      document.getElementById('address').value = c.address || '';
+      document.getElementById('phone').value = c.phone || '';
+      document.getElementById('email').value = c.email || '';
+      document.getElementById('openingHours').value = c.openingHours || '';
+      document.getElementById('notificationEmail').value = c.notificationEmail || '';
+      document.getElementById('amenities').value = c.amenities || '';
+      document.getElementById('promotions').value = c.promotions || '';
+      document.getElementById('policies').value = c.policies || '';
+      if (c.primaryColor) {
+        document.getElementById('primaryColor').value = c.primaryColor;
+        document.getElementById('primaryColorPicker').value = c.primaryColor;
+      }
+      if (c.accentColor) {
+        document.getElementById('accentColor').value = c.accentColor;
+        document.getElementById('accentColorPicker').value = c.accentColor;
+      }
+      services = c.services || [];
       renderServices();
-    } catch (err) {
-      console.error('Error loading config', err);
-    }
+    } catch (err) { console.error('Error loading config', err); }
   }
 
   function renderServices() {
@@ -237,15 +189,8 @@
     `).join('');
   }
 
-  function addService() {
-    services.push({ name: '', price: '', description: '' });
-    renderServices();
-  }
-
-  function removeService(i) {
-    services.splice(i, 1);
-    renderServices();
-  }
+  function addService() { services.push({ name: '', price: '', description: '' }); renderServices(); }
+  function removeService(i) { services.splice(i, 1); renderServices(); }
 
   async function saveConfig() {
     const payload = {
@@ -260,30 +205,20 @@
       amenities: document.getElementById('amenities').value,
       promotions: document.getElementById('promotions').value,
       policies: document.getElementById('policies').value,
-      services: services
+      primaryColor: document.getElementById('primaryColor').value,
+      accentColor: document.getElementById('accentColor').value,
+      services
     };
 
     const statusEl = document.getElementById('statusMsg');
-
     try {
       const res = await fetch('/api/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
-      if (res.ok) {
-        statusEl.className = 'status-msg success';
-        statusEl.textContent = '✅ Guardado correctamente';
-      } else {
-        const data = await res.json();
-        statusEl.className = 'status-msg error';
-        statusEl.textContent = '❌ ' + (data.error || 'Error al guardar');
-      }
-    } catch (err) {
-      statusEl.className = 'status-msg error';
-      statusEl.textContent = '❌ Error de conexión';
-    }
+      if (res.ok) { statusEl.className = 'status-msg success'; statusEl.textContent = '✅ Guardado correctamente'; }
+      else { const d = await res.json(); statusEl.className = 'status-msg error'; statusEl.textContent = '❌ ' + (d.error || 'Error al guardar'); }
+    } catch (err) { statusEl.className = 'status-msg error'; statusEl.textContent = '❌ Error de conexión'; }
   }
 
   loadConfig();

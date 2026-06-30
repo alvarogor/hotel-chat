@@ -15,38 +15,36 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const CONFIG_PATH = path.join(__dirname, "business-config.json");
 
-// ── Default business configuration (Beauty / Aesthetic Clinic) ────────────────
 const DEFAULT_CONFIG = {
-  businessName: "Centro de Estética Bella",
+  businessName: "AR Clínica Estética",
   assistantName: "Sofia",
-  address: "Calle Colón 45, Valencia",
-  openingHours: "Lunes a Viernes 9:30 - 20:00, Sábados 10:00 - 14:00",
-  phone: "+34 96 123 45 67",
-  email: "info@esteticabella.com",
+  address: "Calle Gaztambide 17, Argüelles, Madrid",
+  openingHours: "Lunes a Viernes 10:00 - 20:00",
+  phone: "+34 XXX XXX XXX",
+  email: "info@clinicaalirivero.com",
+  primaryColor: "#1a1208",
+  accentColor: "#c9a96e",
   services: [
-    { name: "Limpieza facial profunda", price: "45", description: "60 min, incluye exfoliación e hidratación" },
-    { name: "Depilación láser (piernas completas)", price: "60", description: "Por sesión, paquete de 6 disponible" },
-    { name: "Manicura + Pedicura", price: "35", description: "Incluye esmaltado semipermanente" },
-    { name: "Masaje relajante", price: "50", description: "60 min, aceites esenciales" },
-    { name: "Tratamiento anti-edad", price: "70", description: "Radiofrecuencia facial, 45 min" }
+    { name: "Consulta inicial gratuita", price: "0", description: "40 min, evaluación personalizada sin compromiso" },
+    { name: "Armonización facial", price: "300", description: "Ácido hialurónico, resultados naturales desde la primera sesión" },
+    { name: "Tratamiento antiedad láser", price: "200", description: "Láser SmartXide, rejuvenecimiento sin cirugía" },
+    { name: "Higiene facial Hidraglow AR", price: "80", description: "Limpieza profunda + hidratación intensa" },
+    { name: "Estimulador de colágeno", price: "250", description: "Firmeza y luminosidad desde la primera sesión" },
+    { name: "Consulta nutrición Método PnK®", price: "60", description: "Programa personalizado de pérdida de peso y bienestar" }
   ],
-  amenities: "Zona de espera con café e infusiones, cabinas privadas, productos veganos y cruelty-free, parking cercano",
-  policies: "Cancelación gratuita hasta 24h antes de la cita. Se requiere un 20% de depósito para tratamientos de más de 60 min. Pago con tarjeta o efectivo.",
-  promotions: "10% de descuento en el primer tratamiento para nuevos clientes. Bono de 6 sesiones de láser con 15% de descuento.",
-  primaryColor: "#d4af37",
-  adminPassword: "admin123",
-  notificationEmail: ""
+  amenities: "Clínica autorizada por la Comunidad de Madrid. Ambiente cercano y discreto. Todos los tratamientos 100% personalizados. Opción de financiación disponible.",
+  promotions: "Primera consulta completamente gratuita y sin compromiso. Opciones de financiación disponibles para todos los tratamientos.",
+  policies: "Cancelación gratuita hasta 24h antes de la cita. Pago tras el tratamiento. Primera visita de evaluación siempre gratuita.",
+  notificationEmail: "",
+  adminPassword: "admin123"
 };
 
-// ── Load / save config ────────────────────────────────────────────────────────
 function loadConfig() {
   try {
     if (fs.existsSync(CONFIG_PATH)) {
-      return JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
+      return { ...DEFAULT_CONFIG, ...JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8")) };
     }
-  } catch (e) {
-    console.error("Error loading config:", e);
-  }
+  } catch (e) { console.error("Error loading config:", e); }
   return DEFAULT_CONFIG;
 }
 
@@ -56,40 +54,37 @@ function saveConfig(config) {
 
 function buildSystemPrompt(config) {
   const serviceList = config.services
-    .map(s => `- ${s.name}: €${s.price} — ${s.description}`)
+    .map(s => `- ${s.name}: ${s.price === "0" ? "Gratuito" : "€" + s.price} — ${s.description}`)
     .join("\n");
 
-  return `
-You are ${config.assistantName}, the friendly AI receptionist of ${config.businessName}, a beauty and aesthetic center.
+  return `Eres ${config.assistantName}, la recepcionista virtual de ${config.businessName}.
 
-BUSINESS DETAILS:
-- Name: ${config.businessName}
-- Location: ${config.address}
-- Opening hours: ${config.openingHours}
-- Phone: ${config.phone}
+DATOS DEL NEGOCIO:
+- Nombre: ${config.businessName}
+- Dirección: ${config.address}
+- Horario: ${config.openingHours}
+- Teléfono: ${config.phone}
 - Email: ${config.email}
 
-SERVICES & PRICES:
+SERVICIOS Y PRECIOS:
 ${serviceList}
 
-AMENITIES:
+COMODIDADES:
 ${config.amenities}
 
-CURRENT PROMOTIONS:
+PROMOCIONES:
 ${config.promotions}
 
-POLICIES:
+POLÍTICA DE CITAS:
 ${config.policies}
 
-PERSONALITY GUIDELINES:
-- Be warm, friendly and professional — like a trusted beauty advisor
-- Always respond in the same language the client uses
-- If asked to book an appointment, collect: name, desired service, preferred date/time, phone number
-- After collecting booking info, confirm it and say the team will call to confirm within a few hours
-- Keep responses concise but friendly
-- Use light emojis occasionally to feel welcoming ✨💆‍♀️
-- If asked about something outside your knowledge (medical advice, specific allergic reactions), recommend they discuss it with the specialist during their visit
-`;
+INSTRUCCIONES:
+- Sé cálida, profesional y cercana
+- Responde siempre en el idioma del cliente
+- Si quieren reservar cita, recoge: nombre, servicio, fecha/hora preferida, teléfono
+- Tras recoger los datos, confirma que el equipo contactará para confirmar la cita
+- Si no sabes algo específico, di que lo consultarán con la doctora en la primera visita
+- Usa emojis con moderación ✨`;
 }
 
 // ── Booking notification ───────────────────────────────────────────────────────
@@ -102,47 +97,41 @@ async function sendBookingNotification(config, booking) {
     await resend.emails.send({
       from: "Recepcionista Virtual <onboarding@resend.dev>",
       to: config.notificationEmail,
-      subject: `🔔 Nueva reserva — ${config.businessName}`,
+      subject: `🔔 Nueva solicitud de cita — ${config.businessName}`,
       html: `
-        <h2>Nueva reserva recibida</h2>
+        <h2 style="color:#1a1208;">Nueva solicitud de cita</h2>
         <p><strong>Nombre:</strong> ${booking.name || "-"}</p>
         <p><strong>Servicio:</strong> ${booking.service || "-"}</p>
         <p><strong>Fecha/hora preferida:</strong> ${booking.datetime || "-"}</p>
         <p><strong>Teléfono:</strong> ${booking.phone || "-"}</p>
         <p><strong>Notas:</strong> ${booking.notes || "-"}</p>
         <hr>
-        <p style="color:#888; font-size:12px;">Generado automáticamente por tu recepcionista virtual.</p>
+        <p style="color:#888; font-size:12px;">Generado por tu recepcionista virtual.</p>
       `
     });
-  } catch (err) {
-    console.error("Error sending notification email:", err);
-  }
+  } catch (err) { console.error("Error sending notification email:", err); }
 }
 
 const BOOKING_TOOL = {
   name: "register_booking",
-  description: "Call this whenever the client has confirmed a booking/appointment request with enough details (name, service, and a preferred date/time at minimum). Only call once per confirmed booking.",
+  description: "Llama a esta función cuando el cliente ha confirmado una solicitud de cita con suficientes datos (nombre, servicio y fecha/hora mínimo).",
   input_schema: {
     type: "object",
     properties: {
-      name: { type: "string", description: "Client's name" },
-      service: { type: "string", description: "Requested service or treatment" },
-      datetime: { type: "string", description: "Preferred date and time as stated by the client" },
-      phone: { type: "string", description: "Client's phone number, if provided" },
-      notes: { type: "string", description: "Any additional notes" }
+      name: { type: "string", description: "Nombre del cliente" },
+      service: { type: "string", description: "Servicio solicitado" },
+      datetime: { type: "string", description: "Fecha y hora preferida" },
+      phone: { type: "string", description: "Teléfono del cliente" },
+      notes: { type: "string", description: "Notas adicionales" }
     },
     required: ["name", "service", "datetime"]
   }
 };
 
-
 // ── Chat endpoint ─────────────────────────────────────────────────────────────
 app.post("/api/chat", async (req, res) => {
   const { messages } = req.body;
-
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: "Messages array required" });
-  }
+  if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "Messages array required" });
 
   try {
     const config = loadConfig();
@@ -150,16 +139,15 @@ app.post("/api/chat", async (req, res) => {
       model: "claude-haiku-4-5",
       max_tokens: 1024,
       system: buildSystemPrompt(config),
-      messages: messages,
+      messages,
       tools: [BOOKING_TOOL],
     });
 
-    const toolUse = response.content.find(block => block.type === "tool_use" && block.name === "register_booking");
-    let replyText = response.content.find(block => block.type === "text")?.text || "";
+    const toolUse = response.content.find(b => b.type === "tool_use" && b.name === "register_booking");
+    let replyText = response.content.find(b => b.type === "text")?.text || "";
 
     if (toolUse) {
       sendBookingNotification(config, toolUse.input);
-
       if (!replyText) {
         const followUp = await client.messages.create({
           model: "claude-haiku-4-5",
@@ -168,59 +156,99 @@ app.post("/api/chat", async (req, res) => {
           messages: [
             ...messages,
             { role: "assistant", content: response.content },
-            { role: "user", content: [{ type: "tool_result", tool_use_id: toolUse.id, content: "Booking registered successfully." }] }
+            { role: "user", content: [{ type: "tool_result", tool_use_id: toolUse.id, content: "Cita registrada." }] }
           ],
           tools: [BOOKING_TOOL],
         });
-        replyText = followUp.content.find(block => block.type === "text")?.text || "¡Reserva confirmada! Te contactaremos en breve.";
+        replyText = followUp.content.find(b => b.type === "text")?.text || "¡Cita registrada! Te contactaremos pronto para confirmar.";
       }
     }
 
     res.json({ reply: replyText });
   } catch (error) {
-    console.error("Anthropic API error:", error);
-    res.status(500).json({ error: "Failed to get response from AI" });
+    console.error("API error:", error);
+    res.status(500).json({ error: "Error al procesar la respuesta" });
   }
 });
 
-// ── Config endpoints (for admin panel + chat widget) ───────────────────────────
+// ── Config endpoints ──────────────────────────────────────────────────────────
 app.get("/api/config", (req, res) => {
-  const config = loadConfig();
-  const { adminPassword, ...publicConfig } = config;
+  const { adminPassword, ...publicConfig } = loadConfig();
   res.json(publicConfig);
 });
 
 app.post("/api/admin-login", (req, res) => {
   const { password } = req.body;
   const config = loadConfig();
-  if (password === config.adminPassword) {
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ success: false, error: "Contraseña incorrecta" });
-  }
+  password === config.adminPassword
+    ? res.json({ success: true })
+    : res.status(401).json({ success: false, error: "Contraseña incorrecta" });
 });
 
 app.post("/api/config", (req, res) => {
   const { password, ...newConfig } = req.body;
   const currentConfig = loadConfig();
-
-  if (password !== currentConfig.adminPassword) {
-    return res.status(401).json({ error: "Incorrect password" });
-  }
-
-  const updatedConfig = { ...currentConfig, ...newConfig, adminPassword: currentConfig.adminPassword };
-  saveConfig(updatedConfig);
+  if (password !== currentConfig.adminPassword) return res.status(401).json({ error: "Contraseña incorrecta" });
+  saveConfig({ ...currentConfig, ...newConfig, adminPassword: currentConfig.adminPassword });
   res.json({ success: true });
 });
 
-// ── Health check ──────────────────────────────────────────────────────────────
 app.get("/api/health", (req, res) => {
-  const config = loadConfig();
-  res.json({ status: "ok", business: config.businessName });
+  res.json({ status: "ok", business: loadConfig().businessName });
+});
+
+// ── WhatsApp webhook (Twilio) ─────────────────────────────────────────────────
+app.post("/api/whatsapp", async (req, res) => {
+  const incomingMsg = req.body.Body;
+  const from = req.body.From;
+
+  if (!incomingMsg) return res.status(400).send("No message");
+
+  try {
+    const config = loadConfig();
+
+    // Use a simple in-memory conversation store keyed by phone number
+    if (!app.locals.conversations) app.locals.conversations = {};
+    if (!app.locals.conversations[from]) app.locals.conversations[from] = [];
+
+    app.locals.conversations[from].push({ role: "user", content: incomingMsg });
+
+    const response = await client.messages.create({
+      model: "claude-haiku-4-5",
+      max_tokens: 1024,
+      system: buildSystemPrompt(config),
+      messages: app.locals.conversations[from],
+      tools: [BOOKING_TOOL],
+    });
+
+    const toolUse = response.content.find(b => b.type === "tool_use" && b.name === "register_booking");
+    let replyText = response.content.find(b => b.type === "text")?.text || "";
+
+    if (toolUse) {
+      sendBookingNotification(config, { ...toolUse.input, phone: from });
+      if (!replyText) replyText = "¡Cita registrada! Te contactaremos pronto para confirmar. 😊";
+    }
+
+    app.locals.conversations[from].push({ role: "assistant", content: replyText });
+
+    // Limit conversation history to last 20 messages
+    if (app.locals.conversations[from].length > 20) {
+      app.locals.conversations[from] = app.locals.conversations[from].slice(-20);
+    }
+
+    // Respond in TwiML format
+    res.set("Content-Type", "text/xml");
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Message>${replyText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</Message>
+</Response>`);
+
+  } catch (error) {
+    console.error("WhatsApp error:", error);
+    res.set("Content-Type", "text/xml");
+    res.send(`<?xml version="1.0" encoding="UTF-8"?><Response><Message>Disculpa, estoy teniendo problemas técnicos. Por favor llama directamente a la clínica.</Message></Response>`);
+  }
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`💆 Recepcionista Virtual running on http://localhost:${PORT}`);
-  console.log(`⚙️  Admin panel: http://localhost:${PORT}/admin.html`);
-});
+app.listen(PORT, () => console.log(`💆 Recepcionista Virtual en http://localhost:${PORT}`));

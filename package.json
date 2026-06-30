@@ -1,11 +1,10 @@
 {
-  "name": "hotel-concierge",
+  "name": "recepcionista-virtual",
   "version": "1.0.0",
-  "description": "AI Concierge for boutique hotels",
+  "description": "Recepcionista virtual con IA para centros de estética",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.20.0",
