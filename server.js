@@ -38,11 +38,11 @@ const DEFAULT_CONFIG = {
   policies: "Cancelación gratuita hasta 24h antes de la cita. Pago tras el tratamiento. Primera visita de evaluación siempre gratuita.",
   notificationEmail: "",
   calendlyLinks: {
-    "consulta inicial": "https://calendly.com/alvarogor69/consulta-inicial-gratuita-40-min",
-    "armonización facial": "https://calendly.com/alvarogor69/armonizacion-facial-60-min",
-    "tratamiento antiedad": "https://calendly.com/alvarogor69/tratamiento-antiedad-laser-45-min",
-    "estimulador de colágeno": "https://calendly.com/alvarogor69/estimulador-de-colageno-45-min",
-    "default": "https://calendly.com/alvarogor69/consulta-inicial-gratuita-40-min"
+    "consulta inicial": "https://calendly.com/recepcionista-virtual/consulta-inicial-gratuita-40-min",
+    "armonización facial": "https://calendly.com/recpecionista-virtual/armonizacion-facial-60-min",
+    "tratamiento antiedad": "https://calendly.com/recpecionista-virtual/tratamiento-antiedad-laser-45-min",
+    "estimulador de colágeno": "https://calendly.com/recepcionista-virtual/estimulador-de-colageno-45-min",
+    "default": "https://calendly.com/recepcionista-virtual/consulta-inicial-gratuita-40-min"
   },
   adminPassword: "admin123"
 };
