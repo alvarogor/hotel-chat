@@ -36,7 +36,13 @@ const DEFAULT_CONFIG = {
   promotions: "Primera consulta completamente gratuita y sin compromiso. Opciones de financiación disponibles para todos los tratamientos.",
   policies: "Cancelación gratuita hasta 24h antes de la cita. Pago tras el tratamiento. Primera visita de evaluación siempre gratuita.",
   notificationEmail: "",
-  calendlyLink: "https://calendly.com/alvarogor69/30min",
+  calendlyLinks: {
+    "consulta inicial": "https://calendly.com/alvarogor69/consulta-inicial-gratuita-40-min",
+    "armonización facial": "https://calendly.com/alvarogor69/armonizacion-facial-60-min",
+    "tratamiento antiedad": "https://calendly.com/alvarogor69/tratamiento-antiedad-laser-45-min",
+    "estimulador de colágeno": "https://calendly.com/alvarogor69/estimulador-de-colageno-45-min",
+    "default": "https://calendly.com/alvarogor69/consulta-inicial-gratuita-40-min"
+  },
   adminPassword: "admin123"
 };
 
@@ -82,9 +88,11 @@ ${config.policies}
 INSTRUCCIONES:
 - Sé cálida, profesional y cercana
 - Responde siempre en el idioma del cliente
-- Cuando alguien quiera reservar una cita o consulta, manda SIEMPRE este link de Calendly: ${config.calendlyLink || ""} — di algo como "Puedes reservar directamente aquí y elegir el hueco que mejor te venga 👉 [link]"
-- Si no hay link de Calendly configurado, recoge: nombre, servicio, fecha/hora preferida, teléfono
-- Tras recoger los datos, confirma que el equipo contactará para confirmar la cita
+- Cuando alguien quiera reservar una cita, identifica el servicio que quiere y manda el link de Calendly correspondiente:
+${Object.entries(config.calendlyLinks || {}).filter(([k]) => k !== 'default').map(([service, link]) => `  * ${service}: ${link}`).join('\n')}
+  * Para cualquier otro servicio o duda: ${config.calendlyLinks?.default || ""}
+- Di algo como: "¡Perfecto! Puedes reservar directamente aquí y elegir el hueco que mejor te venga 👉 [link]"
+- Si no sabes qué servicio quiere, pregúntale primero y luego manda el link correcto
 - Si no sabes algo específico, di que lo consultarán con la doctora en la primera visita
 - Usa emojis con moderación ✨`;
 }
