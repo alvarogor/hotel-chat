@@ -78,6 +78,8 @@
       <input id="openingHours" placeholder="Lunes a Viernes 10:00 - 20:00" />
       <label>Email para recibir notificaciones de reservas</label>
       <input id="notificationEmail" placeholder="tu-email@ejemplo.com" />
+      <label>Link de Calendly (para reservas automáticas)</label>
+      <input id="calendlyLink" placeholder="https://calendly.com/tu-usuario/consulta" />
     </div>
 
     <div class="card">
@@ -161,6 +163,7 @@
       document.getElementById('email').value = c.email || '';
       document.getElementById('openingHours').value = c.openingHours || '';
       document.getElementById('notificationEmail').value = c.notificationEmail || '';
+      document.getElementById('calendlyLink').value = c.calendlyLink || '';
       document.getElementById('amenities').value = c.amenities || '';
       document.getElementById('promotions').value = c.promotions || '';
       document.getElementById('policies').value = c.policies || '';
@@ -202,6 +205,7 @@
       email: document.getElementById('email').value,
       openingHours: document.getElementById('openingHours').value,
       notificationEmail: document.getElementById('notificationEmail').value,
+      calendlyLink: document.getElementById('calendlyLink').value,
       amenities: document.getElementById('amenities').value,
       promotions: document.getElementById('promotions').value,
       policies: document.getElementById('policies').value,
